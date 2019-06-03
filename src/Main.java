@@ -1,6 +1,8 @@
 
 import com.mysql.jdbc.Driver;
 import config.NetConfig;
+import crud.CRUDjavaUtai;
+import daoimpl.UserDaoImpl;
 import utail.JDBCInitUtail;
 
 
@@ -9,32 +11,28 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 public class Main {
-    static Connection connection;
-    static Statement statement;
-    static ResultSet resultSet;
+    private static String sql;
+
 
     public static void main(String[] args) {
+        //数据库增删查改
+        // initCRUD();
+        //Dao模式
+        UserDaoImpl userDao = new UserDaoImpl();
+        userDao.findAll();
+    }
 
-        try {
-            connection = JDBCInitUtail.getConn();
-            //创建statemen
-            statement = connection.createStatement();
-            //初始化sql
-            String sql = "select * from  user_info";
-            resultSet = statement.executeQuery(sql);
-            //执行操作语句
-            while (resultSet.next()) {
-                System.out.println("id=" + resultSet.getInt("id") +
-                        "name=" + resultSet.getString("name") + "age=" +
-                        resultSet.getInt("age"));
-            }
+    private static void initCRUD() {
+        //查询所有
+        //   JDBCInitUtail.resultSet("user_info");
 
-        } catch (SQLException e) {
-            System.out.println("main错误信息=" + e.toString());
-        } finally {
-            //反顺序关闭，严禁判空
-            JDBCInitUtail.closeAll(resultSet, statement, connection);
-
-        }
+        //增加
+//        sql = CRUDjavaUtai.addSQL("user_info",null, "异人", 18);
+        //删除
+//        sql = CRUDjavaUtai.deletSQL("user_info","异人");
+        //更新
+//        sql = CRUDjavaUtai.upSQL("user_info", 19, "张三");
+//        System.out.println(sql);
+//        JDBCInitUtail.statement(sql);
     }
 }
