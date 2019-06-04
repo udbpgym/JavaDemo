@@ -21,8 +21,9 @@ public class CRUDjavaUtai {
         return "update user_info set age = " + age + " where name = '" + name + "'";
     }
 
-    public static String selectAll(String tabName) {
-        return "select * from " + tabName;
+    public static String selectAll(String tabName, String sql) {
+        System.out.println("select * from " + tabName + sql);
+        return "select * from " + tabName + sql;
     }
 
     public static void systemDataAll(ResultSet resultSet) {

@@ -1,6 +1,7 @@
 package utail;
 
 
+import com.mysql.jdbc.StringUtils;
 import com.sun.org.apache.regexp.internal.RE;
 import crud.CRUDjavaUtai;
 
@@ -38,7 +39,7 @@ public class JDBCInitUtail {
     }
 
     //遍历所有
-    public static ResultSet resultSet(String tabName) {
+    public static ResultSet resultSet(String tabName, String sql) {
         try {
             if (connection == null) {
                 connection = JDBCInitUtail.getConn();
@@ -49,10 +50,18 @@ public class JDBCInitUtail {
                 statement = connection.createStatement();
             }
             if (resultSet == null) {
+                resultSet = statement.executeQuery(CRUDjavaUtai.selectAll(tabName, sql));
 
-                resultSet = statement.executeQuery(CRUDjavaUtai.selectAll(tabName));
             }
-            CRUDjavaUtai.systemDataAll(resultSet);
+            //  CRUDjavaUtai.systemDataAll(resultSet);
+            if (resultSet.next()) {
+                System.out.println("id=" + resultSet.getInt("id") +
+                        "name=" + resultSet.getString("name") + "passward=" +
+                        resultSet.getInt("passward") + "登陆成功");
+
+            } else {
+                System.out.println("登陆失败");
+            }
         } catch (SQLException e) {
             System.out.println("main错误信息=" + e.toString());
         } finally {

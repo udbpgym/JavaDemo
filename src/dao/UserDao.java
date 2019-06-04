@@ -8,4 +8,6 @@ public interface UserDao {
      * 查询所有
      * */
     void findAll();
+
+    void login(String name ,String psw);
 }

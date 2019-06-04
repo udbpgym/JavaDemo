@@ -2,6 +2,7 @@
 import com.mysql.jdbc.Driver;
 import config.NetConfig;
 import crud.CRUDjavaUtai;
+import dao.UserDao;
 import daoimpl.UserDaoImpl;
 import utail.JDBCInitUtail;
 
@@ -18,8 +19,9 @@ public class Main {
         //数据库增删查改
         // initCRUD();
         //Dao模式
-        UserDaoImpl userDao = new UserDaoImpl();
-        userDao.findAll();
+        UserDao userDao = new UserDaoImpl();
+       // userDao.findAll();
+        userDao.login("张三","123456");
     }
 
     private static void initCRUD() {
