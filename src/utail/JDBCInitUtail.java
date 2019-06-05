@@ -18,6 +18,7 @@ public class JDBCInitUtail {
     static Connection connection;
     static Statement statement;
     static ResultSet resultSet;
+    static PreparedStatement preparedStatement;
 
     //创建一个属性配置对象
     static {
@@ -38,7 +39,7 @@ public class JDBCInitUtail {
         }
     }
 
-    //遍历所有
+    //遍历所有或者特定条件
     public static ResultSet resultSet(String tabName, String sql) {
         try {
             if (connection == null) {
@@ -70,6 +71,71 @@ public class JDBCInitUtail {
 
         }
         return resultSet;
+    }
+
+    //遍历所有或者特定条件
+    public static ResultSet resultSetPrepareStament(String sql, String name, String psw) {
+        try {
+            System.out.println("查看=" + sql);
+            if (connection == null) {
+                connection = JDBCInitUtail.getConn();
+
+            }
+            if (preparedStatement == null) {
+                //预先对sql执行语法检查 ？后面跟随任何内容直接作为String字符串。
+                preparedStatement = connection.prepareStatement(sql);
+            }
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, psw);
+            if (resultSet == null) {
+                resultSet = preparedStatement.executeQuery();
+            }
+            System.out.println(sql);
+            if (resultSet.next()) {
+                System.out.println("登陆成功");
+
+            } else {
+                System.out.println("登陆失败");
+            }
+        } catch (SQLException e) {
+            System.out.println("main错误信息=" + e.toString());
+        } finally {
+            //反顺序关闭，严谨判空
+            JDBCInitUtail.closeAll(resultSet, preparedStatement, connection);
+
+        }
+        return resultSet;
+    }
+
+    //根据操作语句增加，删除
+    public static Statement statementPrepareStament(String sql, String name, String psw) {
+        try {
+            if (connection == null) {
+                connection = JDBCInitUtail.getConn();
+            }
+            if (preparedStatement == null) {
+                preparedStatement = connection.prepareStatement(sql);
+            }
+            preparedStatement.setString(1, name);
+            if (!StringUtils.isNullOrEmpty(psw)) {
+
+                preparedStatement.setString(2, psw);
+            }
+
+            int result = preparedStatement.executeUpdate();
+            if (result > 0) {
+                System.out.println("操作成功");
+            } else {
+                System.out.println("操作失败");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            //反顺序关闭，严谨判空
+            JDBCInitUtail.closeAll(resultSet, preparedStatement, connection);
+
+        }
+        return statement;
     }
 
     //根据操作语句增加，删除
